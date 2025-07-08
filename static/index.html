@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Reprocesos</title>
+</head>
+<body>
+  <h2>Registrar Reproceso</h2>
+
+  <form id="form">
+    <label>Categoría:</label>
+    <select id="categoria">
+      <option value="Pérdida de vacío">Pérdida de vacío</option>
+      <option value="Quemado">Quemado</option>
+      <option value="Etiqueta mal puesta">Etiqueta mal puesta</option>
+      <option value="Otro">Otro</option>
+    </select><br><br>
+
+    <label>Código de producto:</label>
+    <input type="text" id="codigo_producto" autofocus><br><br>
+
+    <label>Lote:</label>
+    <input type="text" id="lote"><br><br>
+
+    <label>Observaciones:</label>
+    <input type="text" id="observaciones"><br><br>
+
+    <button type="submit">Registrar</button>
+  </form>
+
+  <p id="mensaje"></p>
+
+  <script>
+    const form = document.getElementById("form");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        codigo_producto: document.getElementById("codigo_producto").value,
+        categoria: document.getElementById("categoria").value,
+        lote: document.getElementById("lote").value,
+        observaciones: document.getElementById("observaciones").value
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/registrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          mensaje.innerText = "✅ Registro exitoso (ID: " + result.id + ")";
+          form.reset();
+        } else {
+          mensaje.innerText = "❌ Error: " + result.detail;
+        }
+      } catch (err) {
+        mensaje.innerText = "❌ Error al conectar con el servidor";
+      }
+    });
+  </script>
+</body>
+</html>

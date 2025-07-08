@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel, create_engine
+from app.models import RegistroReproceso
 
 DATABASE_URL = "sqlite:///./reproceso.db"
 
